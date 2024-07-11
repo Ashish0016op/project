@@ -41,7 +41,7 @@ export default function SignUp() {
         "email":data.get('email'),
         "password":data.get('password')
         }
-        const response=await axios.post('https://banao-back.onrender.com/user_details',userDetails);
+        const response=await axios.post('https://banao-backend-z4e1.onrender.com/user_details',userDetails);
         if(response.data.message=="User Already Exits"){
         toast.error('🦄 User Already Exits!', {
             position: "top-center",

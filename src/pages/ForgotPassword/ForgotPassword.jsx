@@ -41,7 +41,7 @@ export default function ForgotPassword() {
         "password":data.get('New password')
       }
       try{
-        const response=await axios.put('https://banao-back.onrender.com/update_password',LoginData);
+        const response=await axios.put('https://banao-backend-z4e1.onrender.com/update_password',LoginData);
         toast.success('🦄 Password Updated Successfully!', {
             position: "top-center",
             autoClose: 5000,
