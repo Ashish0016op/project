@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import { useState } from 'react';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -32,7 +33,9 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+  const[disable,setDisable]=useState(false);
     const handleSubmit = async(event) => {
+        setDisable(true);
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const userDetails={
@@ -41,7 +44,8 @@ export default function SignUp() {
         "email":data.get('email'),
         "password":data.get('password')
         }
-        const response=await axios.post('https://banao-backend-z4e1.onrender.com/user_details',userDetails);
+
+        const response=await axios.post('http://localhost:4000/user_details',userDetails);
         if(response.data.message=="User Already Exits"){
         toast.error('🦄 User Already Exits!', {
             position: "top-center",
@@ -54,6 +58,7 @@ export default function SignUp() {
             theme: "colored",
             transition: Bounce,
             });
+            setDisable(false);
         }else{
         toast.success('🦄 Account Created Successfully!', {
             position: "top-center",
@@ -66,6 +71,7 @@ export default function SignUp() {
             theme: "colored",
             transition: Bounce,
             });
+            setDisable(false);
         }
   };
 
@@ -137,12 +143,12 @@ export default function SignUp() {
                   label="I want to receive updates via email."
                 />
               </Grid>
-            </Grid>
-            <Button
+            </Grid><Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={disable}
             >
               Sign Up
             </Button>

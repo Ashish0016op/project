@@ -16,6 +16,7 @@ import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -35,14 +36,16 @@ const defaultTheme = createTheme();
 
 export default function SignIn() {
     const navigate=useNavigate();
+    const[disable,setDisable]=useState(false);
     const handleSubmit = async(event) => {
       event.preventDefault();
+      setDisable(true);
       const data = new FormData(event.currentTarget);
       const LoginData={
         "email":data.get('email'),
         "password":data.get('password')
       }
-      const response=await axios.post('https://banao-backend-z4e1.onrender.com/login_details',LoginData);
+      const response=await axios.post('http://localhost:4000/login_details',LoginData);
       if(response.data.message=="Invalid Credentials"){
         toast.error('🦄 Invalid Credentials!', {
           position: "top-center",
@@ -55,8 +58,11 @@ export default function SignIn() {
           theme: "colored",
           transition: Bounce,
           });
+          setDisable(false);
       }
       else{
+        const UserId=response.data.user._id;
+        localStorage.setItem("UserId",UserId);
         toast.success('🦄 Login Successfull!', {
           position: "top-center",
           autoClose: 5000,
@@ -68,8 +74,10 @@ export default function SignIn() {
           theme: "colored",
           transition: Bounce,
           });
-          navigate("/home");
+          setDisable(false);
+          navigate("/");
       }
+      localStorage.setItem("token",response.data.token);
     }
 
   return (
@@ -120,6 +128,7 @@ export default function SignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={disable}
             >
               Sign In
             </Button>
@@ -130,7 +139,7 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/" variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
